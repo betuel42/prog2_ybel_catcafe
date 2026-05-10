@@ -1,0 +1,36 @@
+name: Java CI
+
+on:
+    push:
+        branches:
+            - master
+
+    pull_request:
+        branches:
+            - master
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Repository auschecken
+              uses: actions/checkout@v4
+
+            - name: Java 17 einrichten
+              uses: actions/setup-java@v4
+              with:
+                  distribution: temurin
+                  java-version: 17
+
+            - name: Gradle ausführbar machen
+              run: chmod +x gradlew
+
+            - name: Projekt kompilieren
+              run: ./gradlew build -x test
+
+            - name: JUnit-Tests ausführen
+              run: ./gradlew test
+
+            - name: Formatierung prüfen
+              run: ./gradlew spotlessCheck
